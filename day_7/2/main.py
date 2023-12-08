@@ -52,6 +52,8 @@ while endFlag == 0:
             endFlag = 0
         #else:
 #            print(p, cnt)
+
+    # tl;dr, answer is unreachable this way
     if(cnt%1000000 == 0):
         print(cnt)
 
