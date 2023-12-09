@@ -1,228 +1,105 @@
+import math
+
+f = open("in", "r")
+d = f.read()
+f.close()
 
 
-d = ""
-with open("in") as f:
-    d = f.read()
-
-hands = [card.split(" ")[0] for card in d.split("\n")[:-1]]
-bids =  [card.split(" ")[1] for card in d.split("\n")[:-1]]
 
 
-print(hands)
-
-cards = {
-            "A": 0,
-            "K": 1,
-            "Q": 2,
-            "J": 3,
-            "T": 4,
-            "9": 5,
-            "8": 6, 
-            "7": 7,
-            "6": 8,
-            "5": 9,
-            "4": 10,
-            "3": 11,
-            "2": 12,
-            "J": 13
-            }
-
-def isHandABiggerThanB(handA):
-    handA = handA[0]
-    out = 0
-    for a in handA:
-       out = out*15 + cards[a]
-    return out
 
 
-def isFiveOfAKind(hand):
-    Jnum = sum([c=='J' for c in hand])
-    d = {}
-    for card in hand:
-        if (card == "J"):
-            continue
 
-        if not card in d:
-            d[card] = 1
+
+
+
+
+
+
+
+
+
+
+row1 = d.split("\n")[0].split(":")[1].split(" ")
+row2 = d.split("\n")[1].split(":")[1].split(" ")
+
+times = []
+dists = []
+for e in row1:
+    try:
+        times.append(int(e))
+    except:
+        pass
+
+for e in row2:
+    try:
+        dists.append(int(e))
+    except:
+        pass
+
+waysAll = []
+ways = 0
+for race in range(len(times)):
+    t = times[race]
+    d = dists[race]
+
+    # d = (t-v)*v,   where v is selected speed, and t is whole available time
+    # d > d_record
+    # tv - v^2 - d_r > 0
+    # 
+    # -v^2 + tv - d_r > 0
+    #
+    # a = -1
+    # b = t
+    # c = -d_r
+    # 
+    # so
+    # delta = t^2 - 4d_r
+
+    delta = t*t - 4*d
+    if(delta > 0):
+        v2 = -(-t - math.sqrt(delta))/2
+        v1 = -(-t + math.sqrt(delta))/2 
+        print(v1, v2)
+        
+        if(v1 - int(v1) == 0):
+            fr = v1+1
         else:
-            d[card] += 1
+            fr = math.ceil(v1)
 
-    for k in d:
-        if(d[k] + Jnum == 5 or d[k] == 5):
-            return True
-    return False
 
-def isFourOfAKind(hand):
-    d = {}
-    Jnum = sum([c=='J' for c in hand])
-    print(Jnum)
-    for card in hand:
-        if (card == "J"):
-            continue
-        if not card in d:
-            d[card] = 1
+        if(v2 - int(v2) == 0):
+            to = v2-1
         else:
-            d[card] += 1
-
-    print(d)
-    for k in d:
-        if(d[k] + Jnum >= 4 or d[k] == 4):
-            return True
-    return False
-
-
-
-def isFullHouse(hand):
-    d = {}
-    Jnum = sum([c=='J' for c in hand])
-    for card in hand:
-        if not card in d:
-            d[card] = 1
-        else:
-            d[card] += 1
-   
-    b = set(d.values())
-    
-    if b == set([2, 3]):
-        return True
-    return False
-
-
-def isThreeOfAKind(hand):
-    d = {}
-    for card in hand:
-        if not card in d:
-            d[card] = 1
-        else:
-            d[card] += 1
-    
-    b = set(d.values())
-    if b == set([3, 1, 1]):
-        return True
-    return False
-
-def isTwoPair(hand):
-    d = {}
-    for card in hand:
-        if not card in d:
-            d[card] = 1
-        else:
-            d[card] += 1
-    
-    n = 0
-    for k in d.values():
-        if k == 2:
-            n+=1
-
-    if(n == 2):
-        return True
-    return False
-
-
-def isOnePair(hand):
-    d = {}
-    for card in hand:
-        if not card in d:
-            d[card] = 1
-        else:
-            d[card] += 1
-    
-    n = 0
-    for k in d.values():
-        if k == 2:
-            n+=1
-
-    if(n == 1):
-        return True
-    return False
-
- 
-def isHighCard(hand):
-    d = {}
-    for card in hand:
-        if not card in d:
-            d[card] = 1
-        else:
-            d[card] += 1
-    
-    n = 0
-    for k in d.values():
-        if k == 1:
-            n+=1
-
-    if(n == 5):
-        return True
-    return False
+            to = math.floor(v2)
 
 
 
 
-#print(isHandABiggerThanB(hands[1], hands[0]))
-#print(isFiveOfAKind("aaaaa"))
-#print(isFourOfAKind("aaaaa"))
-#print(isFullHouse("aabbb"))
-#print(isThreeOfAKind("1abbb"))
-#print(isTwoPair("11bbb"))
-#print(isTwoPair("11abb"))
-#print(isOnePair("11dfb"))
-#print(isHighCard("12a35"))
+
+        print(fr, to, to-fr+1)
+
+        ways = to-fr+1
+        waysAll.append(ways)
+        print("#################")
 
 
-
-# winTypes = 0, 1, 2, 3, 4, 5, 6
-# 
-# 0 5oak
-# 1 4oak
-# ...
-
-
-handsRanks = []
-
-
-
-for hand in hands:
-    if(isFiveOfAKind(hand)):
-        handsRanks.append(0)
-    elif(isFourOfAKind(hand)):
-        handsRanks.append(1)
-    elif(isFullHouse(hand)):
-        handsRanks.append(2)
-    elif(isThreeOfAKind(hand)):
-        handsRanks.append(3)
-    elif(isTwoPair(hand)):
-        handsRanks.append(4)
-    elif(isOnePair(hand)):
-        handsRanks.append(5)
-    elif(isHighCard(hand)):
-        handsRanks.append(6)
     else:
-        handsRanks.append(7)
-
-
-print(handsRanks)
-
-out = 0
-
-t = []
-last = 0
-for i in range(8):
-    t = []
-    for k in range(len(handsRanks)):
-        if(handsRanks[k] == i):
-            t.append([hands[k], bids[k], i])
-
-    t = sorted(t, key=isHandABiggerThanB)
-
-    print(t)
-    zz = len(handsRanks)
-    for k in range(len(t)):
-        rank = zz - k - last
-        print(rank)
-        out += int(t[k][1]) * (rank)
-    last += len(t)
-
-print(out)
+        ways = 0
+    
 
 
 
+
+
+
+print(times)
+print(dists)
+
+out = waysAll[0]
+for i in range(1,len(waysAll)):
+    out*=waysAll[i]
+
+
+print(int(out))
 
